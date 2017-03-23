@@ -25,8 +25,15 @@ $(call inherit-product-if-exists,frameworks/base/data/sounds/AudioPackage6.mk)
 $(call inherit-product-if-exists,vendor/vendor.mk)
 
 #Product Characteristics
+ifeq ($(SPARSE_IMG),true)
+    PRODUCT_COPY_FILES += \
+        $(if $(wildcard $(PRODUCT_DIR)fstab.$(TARGET_PRODUCT)),$(PRODUCT_DIR)fstab.$(TARGET_PRODUCT),$(LOCAL_PATH)/fstab):root/fstab.$(TARGET_PRODUCT)
+else
+    PRODUCT_COPY_FILES += \
+        $(if $(wildcard $(PRODUCT_DIR)fstab.$(TARGET_PRODUCT)),$(PRODUCT_DIR)fstab.$(TARGET_PRODUCT),$(LOCAL_PATH)/fstab_squashfs):root/fstab.$(TARGET_PRODUCT)
+endif
+
 PRODUCT_COPY_FILES += \
-    $(if $(wildcard $(PRODUCT_DIR)fstab.$(TARGET_PRODUCT)),$(PRODUCT_DIR)fstab.$(TARGET_PRODUCT),$(LOCAL_PATH)/fstab):root/fstab.$(TARGET_PRODUCT) \
     $(if $(wildcard $(PRODUCT_DIR)init.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)init.$(TARGET_PRODUCT).rc,$(LOCAL_PATH)/init.rc):root/init.$(TARGET_PRODUCT).rc \
     $(if $(wildcard $(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc,$(LOCAL_PATH)/ueventd.rc):root/ueventd.$(TARGET_PRODUCT).rc \
     $(LOCAL_PATH)/gpt.ini:root/gpt.$(TARGET_PRODUCT).ini \
